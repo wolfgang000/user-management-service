@@ -1,0 +1,11 @@
+services:
+  web:
+    volumes:
+      - ./UserManagemenService:/app/UserManagemenService
+      # - ./.:/app
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5154:5154"
+  
