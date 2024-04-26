@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserManagemenService.Tests", "UserManagemenService.Tests\UserManagemenService.Tests.csproj", "{84934A75-8E1F-4237-8142-ED91C840B1DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserManagemenService", "UserManagemenService\UserManagemenService.csproj", "{6B214B96-F494-48E3-9711-188942A0C3D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{84934A75-8E1F-4237-8142-ED91C840B1DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84934A75-8E1F-4237-8142-ED91C840B1DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84934A75-8E1F-4237-8142-ED91C840B1DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B214B96-F494-48E3-9711-188942A0C3D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B214B96-F494-48E3-9711-188942A0C3D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B214B96-F494-48E3-9711-188942A0C3D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B214B96-F494-48E3-9711-188942A0C3D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
