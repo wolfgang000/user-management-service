@@ -5,6 +5,7 @@ services:
       - ./UserManagemenService/appsettings.json:/app/UserManagemenService/appsettings.json
       - ./UserManagemenService/Controllers:/app/UserManagemenService/Controllers
       - ./UserManagemenService/DAL:/app/UserManagemenService/DAL
+      - ./UserManagemenService/Migrations:/app/UserManagemenService/Migrations
       - ./UserManagemenService/Models:/app/UserManagemenService/Models
       - ./UserManagemenService/Program.cs:/app/UserManagemenService/Program.cs
       - ./UserManagemenService/Properties:/app/UserManagemenService/Properties
@@ -16,5 +17,13 @@ services:
     ports:
       - "5154:5154"
     environment:
-      ASPNETCORE_URLS: http://+:5000
+      ASPNETCORE_CONNECTION_STRING: "Host=db_dev;Database=postgres_dev;Username=test_user;Password=test_password"
 
+  db_dev:
+    image: "postgres:15.4-alpine3.17"
+    ports:
+      - 8004:5432
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: postgres_dev

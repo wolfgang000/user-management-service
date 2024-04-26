@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using UserManagemenService.DAL;
+using UserManagemenService.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -8,6 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var connectionString = builder.Configuration.GetValue<string>("CONNECTION_STRING");
+builder.Services.AddDbContext<UserManagemenServiceContext>(opt => opt.UseNpgsql(connectionString));
 builder.Services.AddTransient<IUserService, UserService>();
 
 var app = builder.Build();
