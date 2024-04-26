@@ -10,7 +10,6 @@ services:
       - ./UserManagemenService/Properties:/app/UserManagemenService/Properties
       - ./UserManagemenService/UserManagemenService.csproj:/app/UserManagemenService/UserManagemenService.csproj
       - ./UserManagemenService/UserManagemenService.http:/app/UserManagemenService/UserManagemenService.http
-      - ./UserManagemenService/WeatherForecast.cs:/app/UserManagemenService/WeatherForecast.cs
     build:
       context: .
       dockerfile: Dockerfile.dev
