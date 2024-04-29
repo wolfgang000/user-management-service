@@ -1,6 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using FluentValidation;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using UserManagemenService.DAL;
 using UserManagemenService.DTO;

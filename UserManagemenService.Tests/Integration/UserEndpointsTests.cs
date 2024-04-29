@@ -1,12 +1,8 @@
 using System.Net;
 using System.Net.Http.Json;
-using System.Text;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
-using Newtonsoft.Json;
 using UserManagemenService.DAL;
 using UserManagemenService.Models;
-using Xunit;
 
 namespace UserManagemenService.Tests.Integration;
 [Collection("Database collection")]
