@@ -5,12 +5,16 @@ services:
       - ./UserManagemenService/appsettings.json:/app/UserManagemenService/appsettings.json
       - ./UserManagemenService/Controllers:/app/UserManagemenService/Controllers
       - ./UserManagemenService/DAL:/app/UserManagemenService/DAL
+      - ./UserManagemenService/DTO:/app/UserManagemenService/DTO
       - ./UserManagemenService/Migrations:/app/UserManagemenService/Migrations
       - ./UserManagemenService/Models:/app/UserManagemenService/Models
       - ./UserManagemenService/Program.cs:/app/UserManagemenService/Program.cs
       - ./UserManagemenService/Properties:/app/UserManagemenService/Properties
       - ./UserManagemenService/UserManagemenService.csproj:/app/UserManagemenService/UserManagemenService.csproj
       - ./UserManagemenService/UserManagemenService.http:/app/UserManagemenService/UserManagemenService.http
+      - ./UserManagemenService.Tests/Integration:/app/UserManagemenService.Tests/Integration
+      - ./UserManagemenService.Tests/DatabaseFixture.cs:/app/UserManagemenService.Tests/DatabaseFixture.cs
+      - ./UserManagemenService.Tests/UserManagemenService.Tests.csproj:/app/UserManagemenService.Tests/UserManagemenService.Tests.csproj
     build:
       context: .
       dockerfile: Dockerfile.dev

@@ -33,7 +33,7 @@ public class UserController : ControllerBase
         }
 
         var user = await _userService.Insert(userRequest.GetUser());
-        return Ok(user);
+        return Created($"api/users/{user.Id}", user);
     }
 
 
