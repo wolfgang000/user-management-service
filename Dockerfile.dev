@@ -1,14 +1,13 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0
 
-# RUN apk update
-
-# RUN apk add --no-cache \
-#   git \
-#   inotify-tools \
-#   build-base
+# install dependencies
+RUN apt-get update -y && apt-get install -y inotify-tools \
+  && apt-get clean && rm -f /var/lib/apt/lists/*_*
+  
+RUN dotnet tool install --global dotnet-ef
 
 ENV APP_HOME /app
 RUN mkdir -p $APP_HOME
 WORKDIR $APP_HOME
 
-ENTRYPOINT ["dotnet", "watch" ,"--project", "UserManagemenService/UserManagemenService.csproj" , "run"]
+ENTRYPOINT ["/bin/sh", "-c", "dotnet watch --project UserManagemenService/UserManagemenService.csproj run"]

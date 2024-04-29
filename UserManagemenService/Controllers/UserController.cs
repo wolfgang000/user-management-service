@@ -1,6 +1,9 @@
+using System.ComponentModel.DataAnnotations;
+using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using UserManagemenService.DAL;
+using UserManagemenService.DTO;
 using UserManagemenService.Models;
 
 namespace UserManagemenService.Controllers;
@@ -20,9 +23,16 @@ public class UserController : ControllerBase
 
     [HttpPost(Name = "CreateUser")]
     [ProducesResponseType<User>(StatusCodes.Status201Created)]
-    public async Task<ActionResult> Insert([FromBody] User userRequest)
+    public async Task<ActionResult> Insert([FromBody] CreateUserDto userRequest)
     {
-        var user = await _userService.Insert(userRequest);
+        var validator = new CreateUserDtoValidator();
+        var validationResult = validator.Validate(userRequest);
+        if (!validationResult.IsValid) 
+        {
+            return BadRequest(validationResult.ToDictionary());
+        }
+
+        var user = await _userService.Insert(userRequest.GetUser());
         return Ok(user);
     }
 

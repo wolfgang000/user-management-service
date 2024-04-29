@@ -10,11 +10,11 @@ public class User
     [Required]
     public required string Name { get; set; }
 
-    // [Required]
-    // public required string Birthdate { get; set; }
+    [Required]
+    public DateOnly Birthdate { get; set; }
 
-    // [Required]
-    // public bool Active { get; set; }
+    [Required]
+    public bool Active { get; set; }
 
     public void CopyValues(User u) {
         this.Name = u.Name;
