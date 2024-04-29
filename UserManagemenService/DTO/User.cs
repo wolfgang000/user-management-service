@@ -1,11 +1,16 @@
+using System.ComponentModel.DataAnnotations;
 using FluentValidation;
 using UserManagemenService.Models;
 namespace UserManagemenService.DTO;
 
 public class CreateUserDto
 {
-    public required string Name { get; set; }    
+    [Required]
+    public required string Name { get; set; }
+    
+    [Required]    
     public DateOnly Birthdate { get; set; }
+    
     public bool? Active { get; set; }
 
     public User GetUser() {
@@ -29,15 +34,14 @@ public class CreateUserDtoValidator : AbstractValidator<CreateUserDto>
 
 public class UpdateUserDto
 {
-    public required string Name { get; set; }    
-    public DateOnly Birthdate { get; set; }
+    [Required]
     public bool? Active { get; set; }
+}
 
-    public User GetUser() {
-        return new User{
-            Name = Name, 
-            Birthdate = Birthdate, 
-            Active = Active ?? true
-        };
+public class UpdateUserDtoValidator : AbstractValidator<UpdateUserDto>
+{
+    public UpdateUserDtoValidator()
+    {
+        RuleFor(user => user.Active).NotNull();
     }
 }

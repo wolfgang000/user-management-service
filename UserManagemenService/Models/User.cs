@@ -15,8 +15,4 @@ public class User
 
     [Required]
     public bool Active { get; set; }
-
-    public void CopyValues(User u) {
-        this.Name = u.Name;
-    }
 }

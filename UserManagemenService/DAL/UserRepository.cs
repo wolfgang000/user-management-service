@@ -5,7 +5,8 @@ namespace UserManagemenService.DAL;
 
 public interface IUserService
 {
-    Task<IEnumerable<User>> GetUsers();
+    Task<IEnumerable<User>> GetAll();
+    Task<IEnumerable<User>> GetActiveUsers();
     Task<User> Insert(User user);
     Task Delete(User user);
     Task<User?> GetById(long id);
@@ -21,11 +22,17 @@ public class UserService : IUserService
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<User>> GetUsers()
+    public async Task<IEnumerable<User>> GetAll()
     {
         return await _dbContext.Users.ToListAsync();
     }
 
+    public async Task<IEnumerable<User>> GetActiveUsers()
+    {
+        return await _dbContext.Users
+                .Where(u => u.Active)
+                .ToListAsync();
+    }
 
     public async Task<User?> GetById(long id)
     {

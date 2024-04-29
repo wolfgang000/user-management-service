@@ -40,7 +40,7 @@ public class UserController : ControllerBase
     [HttpGet(Name = "GetUsers")]
     public async Task<IEnumerable<User>> Get()
     {
-        var users = await _userService.GetUsers();
+        var users = await _userService.GetActiveUsers();
         return users;
     }
 
@@ -68,15 +68,21 @@ public class UserController : ControllerBase
         }
     }
 
-
     [HttpPatch("{id}", Name = "UpdateUserById")]
     [ProducesResponseType<User>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult>UpdateById(long id, [FromBody] User userRequest)
+    public async Task<ActionResult>UpdateById(long id, [FromBody] UpdateUserDto userRequest)
     {
         var user = await _userService.GetById(id);
         if(user != null) {
-            user.CopyValues(userRequest);
+            var validator = new UpdateUserDtoValidator();
+            var validationResult = validator.Validate(userRequest);
+            if (!validationResult.IsValid) 
+            {
+                return BadRequest(validationResult.ToDictionary());
+            }
+            
+            user.Active = (bool) userRequest.Active!;
             await _userService.Update(user);
             return Ok(user);
         } else {
