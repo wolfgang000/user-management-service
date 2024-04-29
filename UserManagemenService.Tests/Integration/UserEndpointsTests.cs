@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Newtonsoft.Json;
+using UserManagemenService.DAL;
 using UserManagemenService.Models;
 using Xunit;
 
@@ -52,11 +53,25 @@ public class BasicTests
     }
 
     [Fact]
-    public async Task ShouldGetAllUsers()
+    public async Task ShouldGetAllActiveUsers()
     {
         // Arrange
         await _dbFixture.ResetDatabase();
         var client = _factory.CreateClient();
+        using (var dbContext = new UserManagemenServiceContext(_dbFixture.dbContextOptions))
+        {
+            var userRepo = new UserRepository(dbContext);
+            await userRepo.Insert(new User{
+                Name = "Marco Polo",
+                Birthdate = new DateOnly(1999, 1, 1),
+                Active = true
+            });
+            await userRepo.Insert(new User{
+                Name = "Albert Mac",
+                Birthdate = new DateOnly(1999, 1, 1),
+                Active = false
+            });
+        }
 
 
         // Act
@@ -67,6 +82,9 @@ public class BasicTests
         {
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var returnedUsers = await response.Content.ReadFromJsonAsync<IEnumerable<User>>();
+            Assert.Single(returnedUsers!);
+            var returnedUser = returnedUsers!.First();
+            Assert.Equal("Marco Polo", returnedUser!.Name);
         }
         else
         {
@@ -75,4 +93,80 @@ public class BasicTests
         }
     }
 
+    [Fact]
+    public async Task ShouldUpdateUserActiveField()
+    {
+        // Arrange
+        await _dbFixture.ResetDatabase();
+        var client = _factory.CreateClient();
+        User newUser;
+        using (var dbContext = new UserManagemenServiceContext(_dbFixture.dbContextOptions))
+        {
+            var userRepo = new UserRepository(dbContext);
+            newUser = await userRepo.Insert(new User{
+                Name = "Marco Polo",
+                Birthdate = new DateOnly(1999, 1, 1),
+                Active = true
+            });
+        }
+
+
+        // Act
+        var body = new {
+            active = false
+        };
+        var response = await client.PatchAsJsonAsync($"/api/users/{newUser.Id}", body);
+
+        // Assert
+        if (response.IsSuccessStatusCode)
+        {
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var returnedUser = await response.Content.ReadFromJsonAsync<User>();
+            Assert.False(returnedUser!.Active);
+
+            var userDetail = await client.GetFromJsonAsync<User>($"/api/users/{newUser.Id}");
+            Assert.False(userDetail!.Active);
+        }
+        else
+        {
+            var errorResponse = await response.Content.ReadAsStringAsync();
+            throw new Exception(errorResponse);
+        }
+    }
+
+    [Fact]
+    public async Task ShouldDeleteUser()
+    {
+        // Arrange
+        await _dbFixture.ResetDatabase();
+        var client = _factory.CreateClient();
+        User newUser;
+        using (var dbContext = new UserManagemenServiceContext(_dbFixture.dbContextOptions))
+        {
+            var userRepo = new UserRepository(dbContext);
+            newUser = await userRepo.Insert(new User{
+                Name = "Marco Polo",
+                Birthdate = new DateOnly(1999, 1, 1),
+                Active = true
+            });
+        }
+
+
+        // Act
+        var response = await client.DeleteAsync($"/api/users/{newUser.Id}");
+
+        // Assert
+        if (response.IsSuccessStatusCode)
+        {
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
+            var userDetailResponse = await client.GetAsync($"/api/users/{newUser.Id}");
+            Assert.Equal(HttpStatusCode.NotFound, userDetailResponse.StatusCode);
+        }
+        else
+        {
+            var errorResponse = await response.Content.ReadAsStringAsync();
+            throw new Exception(errorResponse);
+        }
+    }
 }

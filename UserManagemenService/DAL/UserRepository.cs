@@ -3,7 +3,7 @@ using UserManagemenService.Models;
 
 namespace UserManagemenService.DAL;
 
-public interface IUserService
+public interface IUserRepository
 {
     Task<IEnumerable<User>> GetAll();
     Task<IEnumerable<User>> GetActiveUsers();
@@ -13,11 +13,11 @@ public interface IUserService
     Task<User> Update(User user);
 }
 
-public class UserService : IUserService
+public class UserRepository : IUserRepository
 {
     private readonly UserManagemenServiceContext _dbContext;
 
-    public UserService(UserManagemenServiceContext dbContext)
+    public UserRepository(UserManagemenServiceContext dbContext)
     {
         _dbContext = dbContext;
     }

@@ -12,7 +12,7 @@ builder.Services.AddSwaggerGen();
 
 var connectionString = builder.Configuration.GetValue<string>("CONNECTION_STRING");
 builder.Services.AddDbContext<UserManagemenServiceContext>(opt => opt.UseNpgsql(connectionString));
-builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 

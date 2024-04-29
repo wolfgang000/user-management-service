@@ -12,13 +12,13 @@ namespace UserManagemenService.Controllers;
 [Route("api/users")]
 public class UserController : ControllerBase
 {
-    private readonly IUserService _userService;
+    private readonly IUserRepository _userRepository;
     private readonly ILogger<UserController> _logger;
 
-    public UserController(ILogger<UserController> logger,IUserService userService)
+    public UserController(ILogger<UserController> logger, IUserRepository userService)
     {
         _logger = logger;
-        _userService = userService;
+        _userRepository = userService;
     }
 
     [HttpPost(Name = "CreateUser")]
@@ -32,7 +32,7 @@ public class UserController : ControllerBase
             return BadRequest(validationResult.ToDictionary());
         }
 
-        var user = await _userService.Insert(userRequest.GetUser());
+        var user = await _userRepository.Insert(userRequest.GetUser());
         return Created($"api/users/{user.Id}", user);
     }
 
@@ -40,7 +40,7 @@ public class UserController : ControllerBase
     [HttpGet(Name = "GetUsers")]
     public async Task<IEnumerable<User>> Get()
     {
-        var users = await _userService.GetActiveUsers();
+        var users = await _userRepository.GetActiveUsers();
         return users;
     }
 
@@ -49,7 +49,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetById(long id)
     {
-        var user = await _userService.GetById(id);
+        var user = await _userRepository.GetById(id);
         return user == null ? NotFound() : Ok(user);
     }
 
@@ -59,9 +59,9 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult>DeleteById(long id)
     {
-        var user = await _userService.GetById(id);
+        var user = await _userRepository.GetById(id);
         if(user != null) {
-            await _userService.Delete(user);
+            await _userRepository.Delete(user);
             return NoContent();
         } else {
             return NotFound();
@@ -73,7 +73,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult>UpdateById(long id, [FromBody] UpdateUserDto userRequest)
     {
-        var user = await _userService.GetById(id);
+        var user = await _userRepository.GetById(id);
         if(user != null) {
             var validator = new UpdateUserDtoValidator();
             var validationResult = validator.Validate(userRequest);
@@ -81,9 +81,9 @@ public class UserController : ControllerBase
             {
                 return BadRequest(validationResult.ToDictionary());
             }
-            
+
             user.Active = (bool) userRequest.Active!;
-            await _userService.Update(user);
+            await _userRepository.Update(user);
             return Ok(user);
         } else {
             return NotFound();
